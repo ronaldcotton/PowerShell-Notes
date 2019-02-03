@@ -108,3 +108,83 @@ $(Get-Date)
 
 *Note: Single precision must be made with cast.*
 
+Typically, you don't specify the types of the numberic literals.  The PowerShell system will parse the type depending on the input, with the only exception being decimal.
+
+**Multiplier suffixes**
+
+When working with power of ten types like kilo, mega, giga, tera and petabytes, you will want to utilize Multiplier Suffixes to handle these cases.  These conventions go against the ISO/IEC conventions - and instead rely on sizes that are more familiar to Computer Science Majors.  Sizes or TB and PB were introduced in PowerShell v2.
+
+KB, MB, GB, TB, PB or (lowercase) kb, mb, gb, tb, or pb. in sizes that increase by 1024.
+
+**Hexadecimal literals**
+
+Start with 0x following sequences of Numbers and A-F.
+
+## 2.3. Collections: dictionaries and hashtables
+
+Hashtables *(System.Collections.hashtable)* allow Powershell users to map key-value pairs. A simuliar interface System.Collections.IDictionary will also work with System.Collections.Hashtable.
+
+### 2.3.1. Creating and inspecting hashtables
+
+```
+$examplehash = @{ CompanyName = 'Microstuff'; CompanyAddress = '1010 Leet Street'; CompanyCity = 'Silicon City'; CompanyState ='CA' }; $examplehash
+```
+
+also known as
+
+```
+$examplehash = @{
+CompanyName = 'Microstuff'
+CompanyAddress = '1010 Leet Street'
+CompanyCity = 'Silicon City'
+CompanyState ='CA'
+}; $examplehash
+```
+
+**Output**:
+
+| `Key`            | `Value`            |
+| ---------------- | ------------------ |
+| `---`            | `-----`            |
+| `CompanyName`    | `Microstuff`       |
+| `CompanyAddress` | `1010 Leet Street` |
+| `CompanyCity`    | `Silicon City`     |
+| `CompanyState`   | `CA`               |
+
+```
+$examplehash.keys; $examplehash.CompanyName; $examplehash['CompanyAddress', 'CompanyCity', 'CompanyState']; 
+```
+
+also known as *(note: same fields but not in the same order for the values)*
+
+```
+$examplehash.Keys; $examplehash[$examplehash.Keys] # or
+$examplehash.Keys; $examplehash.Values
+```
+
+**Output:**
+
+`CompanyAddress
+CompanyState
+CompanyCity
+CompanyName
+Microstuff
+1010 Leet Street
+Silicon City
+CA`
+
+**Note:**
+
+Use Sort-Object to set the ordering of the keys; all keys expect type string.
+
+###  A Digression: Sorting, Enumerating, and Hashtables
+
+To loop though a hashtable, you must use an enumerator to do so, so for example:
+
+```
+$ascii = @{ 'a' = [byte][char]'a'; 'b' = [byte][char]'b'; 'c' = [byte][char]'c'; }
+ForEach ($a in $ascii.GetEnumerator()) { $a.key + ' = ' + $a.value }
+```
+
+### 2.3.2. Ordered Hashtables
+
