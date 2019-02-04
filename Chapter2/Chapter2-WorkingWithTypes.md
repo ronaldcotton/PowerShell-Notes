@@ -155,7 +155,7 @@ CompanyState ='CA'
 $examplehash.keys; $examplehash.CompanyName; $examplehash['CompanyAddress', 'CompanyCity', 'CompanyState']; 
 ```
 
-also known as *(note: same fields but not in the same order for the values)*
+also known as *(note: same fields but not in the same order for the values - by default these values are not ordered)*
 
 ```
 $examplehash.Keys; $examplehash[$examplehash.Keys] # or
@@ -164,14 +164,14 @@ $examplehash.Keys; $examplehash.Values
 
 **Output:**
 
-`CompanyAddress
-CompanyState
-CompanyCity
-CompanyName
-Microstuff
-1010 Leet Street
-Silicon City
-CA`
+`CompanyAddress`
+`CompanyState`
+`CompanyCity`
+`CompanyName`
+`Microstuff`
+`1010 Leet Street`
+`Silicon City`
+`CA`
 
 **Note:**
 
@@ -182,9 +182,26 @@ Use Sort-Object to set the ordering of the keys; all keys expect type string.
 To loop though a hashtable, you must use an enumerator to do so, so for example:
 
 ```
-$ascii = @{ 'a' = [byte][char]'a'; 'b' = [byte][char]'b'; 'c' = [byte][char]'c'; }
-ForEach ($a in $ascii.GetEnumerator()) { $a.key + ' = ' + $a.value }
+$ascii = @{ 'a' = [int64][char]'a'; 'b' = [int64][char]'b'; 'c' = [int64][char]'c'; }
+ForEach ($u in $unicode.GetEnumerator()) { $u.key + ' = ' + $u.value }
 ```
 
 ### 2.3.2. Ordered Hashtables
+
+While hashtables are quick because the data is distributed randomly, perhaps there's a need to organize the properties and values of a hashtable in PowerShell (which began in v3).  To do so, you would cast the hashtable itself with the `[ordered]` cast.  One cavat is that the underlying .NET type System.Collections.Specialized.OrderedDictionary which data elements are by key and by numerical index.
+
+```
+$Things = [ordered]@{ zero = 'apple'; one = 'boy'; two = 'cat' }
+$Things[0] + ' = ' + $Things['zero']  # apple = apple
+$Things[1] = 'bottle'
+$Things  # shows reassigned element
+$Things[3] = 'donkey'  # error
+$Things['three'] = 'donkey'  # ok
+$Things[3]  # donkey
+
+```
+
+### 2.3.3. Modifying and manipulating hashtables
+
+More methods of modifying an existing hashtable
 
