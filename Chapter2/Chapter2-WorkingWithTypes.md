@@ -192,16 +192,54 @@ While hashtables are quick because the data is distributed randomly, perhaps the
 
 ```
 $Things = [ordered]@{ zero = 'apple'; one = 'boy'; two = 'cat' }
-$Things[0] + ' = ' + $Things['zero']  # apple = apple
+$Things[0] + ' = ' + $Things['zero'] 	# output: apple = apple
 $Things[1] = 'bottle'
-$Things  # shows reassigned element
-$Things[3] = 'donkey'  # error
-$Things['three'] = 'donkey'  # ok
+$Things									# outputs reassigned element
+$Things[3] = 'donkey'					# causes error
+$Things['three'] = 'donkey'				# this is valid
 $Things[3]  # donkey
 
 ```
 
 ### 2.3.3. Modifying and manipulating hashtables
 
-More methods of modifying an existing hashtable
+Assignment with either an array accessor (ex. hash['key']) or by the property (ex. hash.property) allows you to assign/add or modify an existing element in the hashtable.  Removal is done with a property.
+
+```
+$Things['zero'] = 21	# modify using array accessor
+$Things.zero = 42		# modify using property
+$Things.four = 4		# add using property
+$Things.remove('zero')	# removing an element
+```
+
+### 2.3.4. Hashtables as Reference Types
+
+If you assign a Hashtable to a variable, you will produce a reference to the original hashtable.  Therefore, any modification that you make will effect both variables.
+
+```
+$ascii = @{ 'a' = [int64][char]'a'; 'b' = [int64][char]'b'; 'c' = [int64][char]'c'; }
+$text = $ascii		# text is now a reference to ascii - changes reflect in both
+$text['a'] = 1
+$ascii['a']			# instead of outputing original value, it now outputs 1
+$text
+$ascii				# both collections are the same - both point to the same data
+```
+
+## 2.4. Collections: Arrays and Sequences
+
+Array literals (Arrays of one type) don't exist in powershell every object is actually treated as a pseudo array, and handles singleton and scalar values by making assumptions
+
+### 2.4.1. Collecting Pipeline Output as an Array
+
+Most commonly, a pipeline will output as a .NET object of type [object[]].  You have the option of leaving out the @() and just making a comma delimited variable.  This automatically treats the data as [object[]].  By the way, you can force the array to cast to a type by starting with the Array type on the line.
+
+```
+$a = 4,5,"6"
+$a.GetType().FullName
+[int[]] $b = 7,8,9
+$b.GetType().FullName
+$b += "10"				# converts value to int32 - ok
+$b += $a                # converts and appends the [Object[]]
+$b += "J"               # error - cannot convert "J" to int32
+```
 
